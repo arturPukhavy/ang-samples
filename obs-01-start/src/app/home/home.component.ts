@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {Subscription, interval} from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -11,16 +12,45 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor() { }
 
-  ngOnInit() {
-    //Option1 (Use anonimous function)
-    interval(1000).subscribe(count => {
-      console.log(count);
-    })
+  // --- Example1: rxjs Observable
+  // ngOnInit() {
+  //   //Option1 (Use anonimous function)
+  //   interval(1000).subscribe(count => {
+  //     console.log(count);
+  //   })
+  //   //Option2
+  //   this.firstObsSubscription = interval(1000).subscribe(count => this.logger(count))
+  // }
 
-    //Option2
-    this.firstObsSubscription = interval(1000).subscribe(count => this.logger(count))
+  // --- Example2: Custom Observable
+  ngOnInit(): void {
+    const customIntervalObservable = Observable.create(observer =>{
+      let count = 0;
+      setInterval(() => {
+        observer.next(count);
+        if(count ===  2) {
+          observer.complete();
+        }
+        if(count > 3) {
+          observer.error(new Error('Count is > 3'));
+        }
+        count++;
+
+      }, 1000);
+    });
+
+    this.firstObsSubscription = customIntervalObservable.subscribe(
+      data => {
+      this.logger(data);
+    }, error => {
+      console.log(error);
+      alert(error.message);
+    }, complete => {
+      console.log('Complete!');
+    }
+    )
   }
-
+  
   logger(c: number){
     console.log(c);
   }
@@ -29,5 +59,4 @@ export class HomeComponent implements OnInit, OnDestroy {
     console.log("Call ngOnDestroy and unsubscribe")
     this.firstObsSubscription.unsubscribe();
   }
- 
 }
