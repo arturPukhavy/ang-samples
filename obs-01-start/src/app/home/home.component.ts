@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {Subscription, interval} from 'rxjs';
-import { Observable } from 'rxjs';
+import {Subscription, interval, Observable} from 'rxjs';
+
+import { map, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +23,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   //   this.firstObsSubscription = interval(1000).subscribe(count => this.logger(count))
   // }
 
-  // --- Example2: Custom Observable
+  // --- Example2: Custom Observable with operators
   ngOnInit(): void {
     const customIntervalObservable = Observable.create(observer =>{
       let count = 0;
@@ -39,7 +40,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       }, 1000);
     });
 
-    this.firstObsSubscription = customIntervalObservable.subscribe(
+    this.firstObsSubscription = customIntervalObservable
+    // Example of operators
+    .pipe(filter( (data: number) => {
+      return data > 0;
+    }), map( data =>{
+      return 'Transformed data: ' + data
+    }))
+    // Subscribe after applying operators
+    .subscribe(
       data => {
       this.logger(data);
     }, error => {
