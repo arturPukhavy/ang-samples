@@ -39,11 +39,12 @@ export class AppComponent implements OnInit {
 
   private fetchPosts() {
     this.http
-      .get('https://ng-complete-guide-c56d3.firebaseio.com/posts.json')
+      .get('http://localhost:4200/api/v1/products')
       .pipe(
         map(responseData => {
           const postsArray = [];
           for (const key in responseData) {
+            console.log('---key: ' + key);
             if (responseData.hasOwnProperty(key)) {
               postsArray.push({ ...responseData[key], id: key });
             }
