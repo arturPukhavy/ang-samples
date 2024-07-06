@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
+import { Product } from './model/product.model';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,7 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  loadedPosts = [];
+  loadedPosts: Product[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -37,24 +38,37 @@ export class AppComponent implements OnInit {
     // Send Http request
   }
 
+  //---Otpion 1
+  // private fetchPosts() {
+  //   this.http
+  //     .get('http://localhost:4200/api/v1/products')
+  //     .pipe(
+  //       map(responseData => {
+  //         const postsArray = [];
+  //         for (const key in responseData) {
+  //           console.log('---key: ' + key);
+  //           if (responseData.hasOwnProperty(key)) {
+  //             postsArray.push({ ...responseData[key], id: key });
+  //           }
+  //         }
+  //         return postsArray;
+  //       })
+  //     )
+  //     .subscribe(posts => {
+  //       console.log(posts);
+  //     });
+  // }
+
+  //---Otpion 2
   private fetchPosts() {
     this.http
-      .get('http://localhost:4200/api/v1/products')
-      .pipe(
-        map(responseData => {
-          const postsArray = [];
-          for (const key in responseData) {
-            console.log('---key: ' + key);
-            if (responseData.hasOwnProperty(key)) {
-              postsArray.push({ ...responseData[key], id: key });
-            }
-          }
-          return postsArray;
-        })
-      )
+      .get<Product[]>('http://localhost:4200/api/v1/products')
       .subscribe(posts => {
-        // ...
-        console.log(posts);
+        posts.forEach(element => {
+          console.log('Element: ' + element.naam);
+        })
+        this.loadedPosts = posts;
       });
   }
+
 }
