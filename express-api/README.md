@@ -13,7 +13,14 @@ curl http://localhost:3000/api/v1/products
 ```
 #### HTTP POST: Add a new product
 ```
-TODO
+curl 'http://localhost:3000/api/v1/products' \
+--header 'Content-Type: application/json' \
+--data '{
+"naam": "Notebook",
+"merk": "Dell",
+"voorraad": 34,
+"price": 1200.20
+}'
 ```
 #### HTTP PUT: Update a product
 ```
