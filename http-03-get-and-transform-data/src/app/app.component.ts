@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
   //---Otpion 1
   // private fetchPosts() {
   //   this.http
-  //     .get('http://localhost:4200/api/v1/products')
+  //     .get('/api/v1/products')
   //     .pipe(
   //       map(responseData => {
   //         const postsArray = [];
@@ -62,10 +62,10 @@ export class AppComponent implements OnInit {
   //---Otpion 2
   private fetchPosts() {
     this.http
-      .get<Product[]>('http://localhost:4200/api/v1/products')
+      .get<Product[]>('/api/v1/products')
       .subscribe(posts => {
         posts.forEach(element => {
-          console.log('Element: ' + element.naam);
+          console.log('Item: ' + element.naam);
         })
         this.loadedPosts = posts;
       });
