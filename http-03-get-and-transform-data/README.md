@@ -19,7 +19,7 @@ ng serve --proxy-config proxy.conf.json
 This is an example:
 ```
 {
-   "/v1/products": {
+   "/api/v1/products": {
       "target": "http://localhost:3000",
       "secure": false
    }
