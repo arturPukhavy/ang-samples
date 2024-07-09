@@ -10,6 +10,7 @@ import { Product } from './model/product.model';
 })
 export class AppComponent implements OnInit {
   loadedPosts: Product[] = [];
+  savedPosts: Product[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -17,15 +18,16 @@ export class AppComponent implements OnInit {
     this.fetchPosts();
   }
 
-  onCreatePost(postData: { title: string; content: string }) {
+  onCreatePost(postData: { naam: string; merk: string; voorraad: number; price: number}) {
     // Send Http request
     this.http
-      .post(
-        'https://ng-complete-guide-c56d3.firebaseio.com/posts.json',
+      .post<Product[]>(
+        '/api/v1/products',
         postData
       )
       .subscribe(responseData => {
         console.log(responseData);
+        this.savedPosts = responseData;
       });
   }
 
