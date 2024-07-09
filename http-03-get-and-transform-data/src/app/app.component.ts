@@ -10,6 +10,7 @@ import { Product } from './model/product.model';
 })
 export class AppComponent implements OnInit {
   loadedPosts: Product[] = [];
+  savedPosts: Product[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -17,15 +18,16 @@ export class AppComponent implements OnInit {
     this.fetchPosts();
   }
 
-  onCreatePost(postData: { title: string; content: string }) {
+  onCreatePost(postData: { naam: string; merk: string; voorraad: number; price: number}) {
     // Send Http request
     this.http
-      .post(
-        'https://ng-complete-guide-c56d3.firebaseio.com/posts.json',
+      .post<Product[]>(
+        '/api/v1/products',
         postData
       )
       .subscribe(responseData => {
         console.log(responseData);
+        this.savedPosts = responseData;
       });
   }
 
@@ -33,15 +35,20 @@ export class AppComponent implements OnInit {
     // Send Http request
     this.fetchPosts();
   }
-
+  
   onClearPosts() {
     // Send Http request
+    this.http.delete('/api/v1/products').subscribe(() => {
+      this.savedPosts = [];
+      this.loadedPosts = [];
+      
+    });
   }
 
   //---Otpion 1
   // private fetchPosts() {
   //   this.http
-  //     .get('http://localhost:4200/api/v1/products')
+  //     .get('/api/v1/products')
   //     .pipe(
   //       map(responseData => {
   //         const postsArray = [];
@@ -62,10 +69,10 @@ export class AppComponent implements OnInit {
   //---Otpion 2
   private fetchPosts() {
     this.http
-      .get<Product[]>('http://localhost:4200/api/v1/products')
+      .get<Product[]>('/api/v1/products')
       .subscribe(posts => {
         posts.forEach(element => {
-          console.log('Element: ' + element.naam);
+          console.log('Item: ' + element.naam);
         })
         this.loadedPosts = posts;
       });

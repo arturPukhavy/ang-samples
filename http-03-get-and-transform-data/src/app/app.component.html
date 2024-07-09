@@ -3,25 +3,50 @@
     <div class="col-xs-12 col-md-6 col-md-offset-3">
       <form #postForm="ngForm" (ngSubmit)="onCreatePost(postForm.value)">
         <div class="form-group">
-          <label for="title">Title</label>
+          <label for="naam">Naam</label>
           <input
             type="text"
             class="form-control"
-            id="title"
+            id="naam"
             required
             ngModel
-            name="title"
+            name="naam"
           />
         </div>
         <div class="form-group">
-          <label for="content">Content</label>
-          <textarea
+          <label for="merk">Brand</label>
+          <input
+            type="text"
             class="form-control"
-            id="content"
+            id="merk"
             required
             ngModel
-            name="content"
-          ></textarea>
+            name="merk"
+          />
+        </div>
+        <div class="form-group">
+          <label for="voorraad">Stock</label>
+          <input
+            type="number"
+            class="form-control"
+            id="voorraad"
+            required
+            pattern="^[1-9]+[0-9]*$"
+            ngModel
+            name="voorraad"
+          />
+        </div>
+        <div class="form-group">
+          <label for="price">Price, €</label>
+          <input
+            type="number"
+            class="form-control"
+            id="price"
+            required
+            pattern="^\d*.?\d{1,2}?$"
+            ngModel
+            name="price"
+          />
         </div>
         <button
           class="btn btn-primary"
