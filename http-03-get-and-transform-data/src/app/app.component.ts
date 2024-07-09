@@ -35,9 +35,14 @@ export class AppComponent implements OnInit {
     // Send Http request
     this.fetchPosts();
   }
-
+  
   onClearPosts() {
     // Send Http request
+    this.http.delete('/api/v1/products').subscribe(() => {
+      this.savedPosts = [];
+      this.loadedPosts = [];
+      
+    });
   }
 
   //---Otpion 1
