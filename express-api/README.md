@@ -46,7 +46,8 @@ curl --request DELETE 'http://localhost:3000/api/v1/product' \
 
 #### HTTP DELETE: Delete All products
 ```
-TODO
+curl --location --request DELETE 'http://localhost:3000/api/v1/products' \
+--data ''
 ```
 
 ## Resources
