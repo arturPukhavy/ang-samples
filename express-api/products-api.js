@@ -25,11 +25,17 @@ const products = [
 
 //--- HTTP GET: get product by Id
 app.get('/api/v1/product/:id', (req, res) => {
-  //Get aprobudc from DB by id
 
   //TODO: validate id!
-  console.log(`Product id:: ` + req.params.id)
-  res.json(products[req.params.id-1])
+  
+  console.log(`Product id: ` + req.params.id)
+  const  product= findObjectById(products, +req.params.id); //Use '+' to convert string->number
+  if (product) {
+    res.json(product)
+  } else {
+    console.log('Product not found');
+    return res.status(404).json({error: 'Product not found'});
+  }
 })
 
 //--- HTTP POST: Add a new product
@@ -47,8 +53,26 @@ app.post('/api/v1/products', (req, res) => {
 });
 
 //--- HTTP PUT: Update existing product by id
-//TODO
+app.put('/api/v1/products', (req, res) => {
+  const product = req.body;
 
+  const  productToUpdate= findObjectById(products, product.id);
+  if (productToUpdate) {
+    console.log(`Product found: ${JSON.stringify(productToUpdate)}`);
+    productToUpdate.naam = product.naam
+    productToUpdate.merk = product.merk
+    productToUpdate.voorraad = product.voorraad
+    productToUpdate.price = product.price
+  } else {
+    //TODO return an error
+    console.log('Product not found');
+    return res.status(404).json({error: 'Product not found'});
+  }
+  // TODO: Perform any necessary validation if necessary
+
+  console.log(`Product has been updated: ${JSON.stringify(productToUpdate)}`)
+  res.json({id: productToUpdate.id});
+});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
