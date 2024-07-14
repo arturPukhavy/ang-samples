@@ -35,7 +35,16 @@ curl --request PUT 'http://localhost:3000/api/v1/products' \
 }'
 ```
 
-#### HTTP DELETE: Delete a profuct
+#### HTTP DELETE: Delete profuct by ID
+```
+curl --request DELETE 'http://localhost:3000/api/v1/product' \
+--header 'Content-Type: application/json' \
+--data '    {
+        "id": 1
+    }'
+```
+
+#### HTTP DELETE: Delete All products
 ```
 TODO
 ```
