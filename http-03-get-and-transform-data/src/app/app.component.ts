@@ -35,7 +35,12 @@ export class AppComponent implements OnInit {
     // Send Http request
     this.fetchPosts();
   }
-  
+  onDeleteProuct(id: number) {
+    console.log('Delete Product by Id: ' + id);
+
+
+
+  }
   onClearPosts() {
     // Send Http request
     this.http.delete('/api/v1/products').subscribe(() => {
