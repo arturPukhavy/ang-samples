@@ -24,7 +24,15 @@ curl 'http://localhost:3000/api/v1/products' \
 ```
 #### HTTP PUT: Update a product
 ```
-TODO
+curl --request PUT 'http://localhost:3000/api/v1/products' \
+--header 'Content-Type: application/json' \
+--data '    {
+        "id": 4,
+        "naam": "Monitor",
+        "merk": "Samsung",
+        "voorraad": 21,
+        "price": 120.2
+    }'
 ```
 
 #### HTTP DELETE: Delete a profuct
