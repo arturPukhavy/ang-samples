@@ -32,7 +32,7 @@ curl --request PUT 'http://localhost:3000/api/v1/products' \
         "merk": "Samsung",
         "voorraad": 21,
         "price": 120.2
-    }'
+}'
 ```
 
 #### HTTP DELETE: Delete a profuct
