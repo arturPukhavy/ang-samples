@@ -2,5 +2,10 @@
    "/api/v1/products": {
       "target": "http://localhost:3000",
       "secure": false
+   },
+   "/api/v1/product": {
+      "target": "http://localhost:3000",
+      "secure": false
    }
+
 }

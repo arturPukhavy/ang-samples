@@ -5,3 +5,8 @@
 .row {
   margin: 20px 0;
 }
+
+.invisible {
+  display: none;
+  visibility: hidden;
+}

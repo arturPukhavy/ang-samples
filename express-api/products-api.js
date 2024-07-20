@@ -95,7 +95,7 @@ app.delete('/api/v1/product', (req, res) => {
   else {
     //TODO return an error
     console.log('Product not found');
-    return res.status(404).json({error: 'Product not found'});
+    return res.status(400).json({error: 'Product not found'});
   }
   console.log(`Deleted product: ${JSON.stringify(productToDelete)}`)
   res.json(products);
