@@ -14,17 +14,17 @@ export class AppComponent implements OnInit {
   loadedPosts: Product[] = [];
   startedEditing = new Subject<number>();
   @ViewChild('postForm') productForm: NgForm; 
-  subscription: Subscription;
   editMode = false;
   editItemIndex: number;  
   editedItem: Product;
-  currentId: number; 
 
   constructor(private http: HttpClient) {}
   
 
   ngOnInit() {
-    this.subscription = this.startedEditing
+    this.fetchPosts();
+
+    this.startedEditing
       .subscribe(
         (index: number) => {
           this.editItemIndex = index;
@@ -58,6 +58,7 @@ export class AppComponent implements OnInit {
     console.log('PUT data: ' + JSON.stringify(putData));
     this.http.put<Product[]>('/api/v1/products', putData)
       .subscribe()
+      this.fetchPosts();
   }
 
   onFetchPosts() {
@@ -71,7 +72,7 @@ export class AppComponent implements OnInit {
       //   'Content-Type': 'application/json',
       // }),
       body: {
-        id: id
+        id:id
       },
     };
 
@@ -134,7 +135,6 @@ export class AppComponent implements OnInit {
 
   onEditProduct(index: number) {
     this.startedEditing.next(index);
-    this.currentId = index
   }
   getProduct(index: number) {
     return this.loadedPosts[index];
