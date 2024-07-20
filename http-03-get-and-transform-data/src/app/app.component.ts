@@ -28,10 +28,11 @@ export class AppComponent implements OnInit {
       .subscribe(
         (index: number) => {
           this.editItemIndex = index;
-          console.log(this.getProduct(index));
+          console.log('Product to edit: ' + JSON.stringify(this.getProduct(index)));
           this.editMode = true;
           this.editedItem = this.getProduct(index);
           this.productForm.setValue({
+            id: this.getProduct(index).id,
             naam: this.editedItem.naam,
             merk: this.editedItem.merk,
             voorraad: this.editedItem.voorraad,
@@ -54,6 +55,7 @@ export class AppComponent implements OnInit {
       this.fetchPosts();
   }
   onUpdatePost(putData: { id: number, naam: string; merk: string; voorraad: number; price: number}) {
+    console.log('PUT data: ' + JSON.stringify(putData));
     this.http.put<Product[]>('/api/v1/products', putData)
       .subscribe()
   }
@@ -63,9 +65,31 @@ export class AppComponent implements OnInit {
     this.fetchPosts();
   }
   onDeleteProduct(id: number) {
-    this.http.delete('/api/v1/products').subscribe();
-      this.loadedPosts = this.loadedPosts.filter(item => item.id !== id);
-      console.log('Delete Product by Id: ' + id);    
+    // Create options 
+    const options = {
+      // headers: new HttpHeaders({
+      //   'Content-Type': 'application/json',
+      // }),
+      body: {
+        id: id
+      },
+    };
+
+    // Option1: Delete a product in BE 
+    // this.http.delete('/api/v1/product', options).subscribe();
+    // this.loadedPosts = this.loadedPosts.filter(item => item.id !== id);
+    // console.log('Delete Product by Id: ' + id);
+
+    // Option2: Delete a product in BE (better solution!)
+    this.http.delete('/api/v1/product', options).subscribe({
+      next: data => {
+        this.loadedPosts = this.loadedPosts.filter(item => item.id !== id);
+        console.log('Delete successful, id: ' + id);
+      },
+      error: error => {
+          console.error('There was an error: ', error.message);
+      }
+  });
   }
 
   onClearPosts() {
