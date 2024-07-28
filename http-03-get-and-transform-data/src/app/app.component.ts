@@ -42,23 +42,32 @@ export class AppComponent implements OnInit {
     ) 
   }
 
-  onCreatePost(postData: { naam: string; merk: string; voorraad: number; price: number}) {
+  onCreatePost(postData: {naam: string; merk: string; voorraad: number; price: number}) {
     // Send Http request
-    this.http
-      .post<Product[]>(
-        '/api/v1/products',
-        postData
-      )
-      .subscribe(responseData => {
-        console.log(responseData);
+    this.http.post<Product[]>('/api/v1/products', postData)
+      .subscribe({
+        next: data => {
+          console.log('Product added: ' + JSON.stringify(postData));
+          this.fetchPosts()
+        },
+        error: error => {
+          console.error('There was an error: ', error.message);
+        }
       });
-      this.fetchPosts();
   }
+
   onUpdatePost(putData: { id: number, naam: string; merk: string; voorraad: number; price: number}) {
     console.log('PUT data: ' + JSON.stringify(putData));
     this.http.put<Product[]>('/api/v1/products', putData)
-      .subscribe()
-      this.fetchPosts();
+      .subscribe({
+        next: data => {
+          console.log('Product changed: ' + JSON.stringify(putData));
+          this.fetchPosts()
+        },
+        error: error => {
+          console.error('There was an error: ', error.message);
+        }
+      });
   }
 
   onFetchPosts() {
@@ -95,8 +104,14 @@ export class AppComponent implements OnInit {
 
   onClearPosts() {
     // Send Http request
-    this.http.delete<Product>('/api/v1/products').subscribe(() => {
-      this.loadedPosts = [];
+    this.http.delete<Product>('/api/v1/products').subscribe({
+      next: data => {
+        console.log('All products deleted');
+        this.loadedPosts = [];
+      },
+      error: error => {
+        console.error('There was an error: ', error.message);
+      }
     });
   }
 
@@ -123,14 +138,17 @@ export class AppComponent implements OnInit {
 
   //---Otpion 2
   private fetchPosts() {
-    this.http
-      .get<Product[]>('/api/v1/products')
-      .subscribe(posts => {
-        posts.forEach(element => {
-          console.log('Item: ' + element.naam);
-        })
-        this.loadedPosts = posts;
-      });
+    this.http.get<Product[]>('/api/v1/products').subscribe({
+        next: data => {
+          data.forEach(element => {
+            console.log('Item: ' + element.naam)
+          });
+          this.loadedPosts = data;
+        },
+        error: error => {
+          console.error('There was an error: ', error.message);
+        }
+    });
   }
 
   onEditProduct(index: number) {
