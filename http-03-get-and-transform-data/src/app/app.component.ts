@@ -4,7 +4,7 @@ import { filter, map } from 'rxjs/operators';
 import { Subject, Subscription} from 'rxjs';
 import { Product } from './model/product.model';
 import { NgForm } from '@angular/forms';
-import { NgxSpinnerService } from 'ngx-spinner';
+
 
 @Component({
   selector: 'app-root',
@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
   editedItem: Product;
   errorHandlingMode = false;
 
-  constructor(private http: HttpClient, private spinnerService: NgxSpinnerService) {}
+  constructor(private http: HttpClient) {}
   
 
   ngOnInit() {
@@ -49,10 +49,10 @@ export class AppComponent implements OnInit {
     this.http.post<Product[]>('/api/v1/products', postData)
       .subscribe({
         next: data => {
-          this.spinnerService.show();
-          setTimeout(() => {
-            this.spinnerService.hide();
-          }, 2000);
+          // this.spinnerService.show();
+          // setTimeout(() => {
+          //   this.spinnerService.hide();
+          // }, 2000);
           console.log('Product added: ' + JSON.stringify(postData));
           this.fetchPosts()
         },
