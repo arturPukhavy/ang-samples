@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   editItemIndex: number;  
   editedItem: Product;
   errorHandlingMode = false;
+  isLoading = false;
 
   constructor(private http: HttpClient) {}
   
@@ -46,6 +47,10 @@ export class AppComponent implements OnInit {
 
   onCreatePost(postData: {naam: string; merk: string; voorraad: number; price: number}) {
     // Send Http request
+    this.isLoading = true;
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 3000);
     this.http.post<Product[]>('/api/v1/products', postData)
       .subscribe({
         next: data => {
@@ -54,7 +59,8 @@ export class AppComponent implements OnInit {
           //   this.spinnerService.hide();
           // }, 2000);
           console.log('Product added: ' + JSON.stringify(postData));
-          this.fetchPosts()
+          this.fetchPosts(),
+          this.isLoading = false;
         },
         error: error => {
           console.error('There was an error: ', error.message);
