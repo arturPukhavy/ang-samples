@@ -4,6 +4,7 @@ import { filter, map } from 'rxjs/operators';
 import { Subject, Subscription} from 'rxjs';
 import { Product } from './model/product.model';
 import { NgForm } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-root',
@@ -17,8 +18,9 @@ export class AppComponent implements OnInit {
   editMode = false;
   editItemIndex: number;  
   editedItem: Product;
+  errorHandlingMode = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private spinnerService: NgxSpinnerService) {}
   
 
   ngOnInit() {
@@ -47,6 +49,10 @@ export class AppComponent implements OnInit {
     this.http.post<Product[]>('/api/v1/products', postData)
       .subscribe({
         next: data => {
+          this.spinnerService.show();
+          setTimeout(() => {
+            this.spinnerService.hide();
+          }, 2000);
           console.log('Product added: ' + JSON.stringify(postData));
           this.fetchPosts()
         },
@@ -95,6 +101,7 @@ export class AppComponent implements OnInit {
       next: data => {
         this.loadedPosts = this.loadedPosts.filter(item => item.id !== id);
         console.log('Delete successful, id: ' + id);
+        this.errorHandlingMode = true;
       },
       error: error => {
           console.error('There was an error: ', error.message);
@@ -161,7 +168,10 @@ export class AppComponent implements OnInit {
   onCancel() {
     this.productForm.reset();
     this.editMode = false;
+  }
 
+  onHandleError() {
+    this.errorHandlingMode = false;
   }
 
 }
