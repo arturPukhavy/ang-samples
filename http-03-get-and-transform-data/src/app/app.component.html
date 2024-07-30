@@ -1,5 +1,9 @@
 <div class="container">
   <div class="row">
+    <app-alert
+    *ngIf="errorHandlingMode"
+    (close)="onHandleError()"
+    ></app-alert>
     <div class="col-xs-12 col-md-6 col-md-offset-3">
       <form #postForm="ngForm" (ngSubmit)="onCreatePost(postForm.value)">
         <div class="form-group invisible">
@@ -72,20 +76,25 @@
         type="button"
         [disabled]="!editMode || !postForm.valid"
         (click)="onUpdatePost(postForm.value)"
-      >
-        Update Post
-      </button>
-      |
-      <button
-      class="btn btn-danger"
-      type="button"
-      (click)="onCancel()"
-    >
-      Cancel
-    </button>
+        >
+          Update Post
+        </button>
+        |
+        <button
+        class="btn btn-danger"
+        type="button"
+        (click)="onCancel()"
+        >
+          Cancel
+        </button>
       </form>
     </div>
   </div>
+  <ngx-spinner>
+    <div class="cssload-container">
+      <div class="cssload-speeding-wheel"></div>
+    </div>
+  </ngx-spinner>
   <hr />
   <div class="row">
     <div class="col-xs-12 col-md-6 col-md-offset-3">

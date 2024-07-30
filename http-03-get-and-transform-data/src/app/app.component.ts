@@ -4,6 +4,8 @@ import { filter, map } from 'rxjs/operators';
 import { Subject, Subscription} from 'rxjs';
 import { Product } from './model/product.model';
 import { NgForm } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 
 @Component({
   selector: 'app-root',
@@ -17,13 +19,13 @@ export class AppComponent implements OnInit {
   editMode = false;
   editItemIndex: number;  
   editedItem: Product;
+  errorHandlingMode = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private spinnerService: NgxSpinnerService) {}
   
 
   ngOnInit() {
     this.fetchPosts();
-
     this.startedEditing
       .subscribe(
         (index: number) => {
@@ -43,12 +45,15 @@ export class AppComponent implements OnInit {
   }
 
   onCreatePost(postData: {naam: string; merk: string; voorraad: number; price: number}) {
-    // Send Http request
+    this.spinnerService.show();
     this.http.post<Product[]>('/api/v1/products', postData)
       .subscribe({
         next: data => {
+          setTimeout(() => {
+            this.spinnerService.hide();
+          }, 2000);
           console.log('Product added: ' + JSON.stringify(postData));
-          this.fetchPosts()
+          this.fetchPosts();
         },
         error: error => {
           console.error('There was an error: ', error.message);
@@ -63,6 +68,7 @@ export class AppComponent implements OnInit {
         next: data => {
           console.log('Product changed: ' + JSON.stringify(putData));
           this.fetchPosts()
+          this.errorHandlingMode = true;
         },
         error: error => {
           console.error('There was an error: ', error.message);
@@ -95,6 +101,7 @@ export class AppComponent implements OnInit {
       next: data => {
         this.loadedPosts = this.loadedPosts.filter(item => item.id !== id);
         console.log('Delete successful, id: ' + id);
+        this.errorHandlingMode = true;
       },
       error: error => {
           console.error('There was an error: ', error.message);
@@ -108,6 +115,7 @@ export class AppComponent implements OnInit {
       next: data => {
         console.log('All products deleted');
         this.loadedPosts = [];
+        this.errorHandlingMode = true;
       },
       error: error => {
         console.error('There was an error: ', error.message);
@@ -161,7 +169,10 @@ export class AppComponent implements OnInit {
   onCancel() {
     this.productForm.reset();
     this.editMode = false;
+  }
 
+  onHandleError() {
+    this.errorHandlingMode = false;
   }
 
 }
