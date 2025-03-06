@@ -1,0 +1,10 @@
+<h2>Task List</h2>
+    <button [routerLink]="['/tasks/create']">Create New Task</button>
+    <ul>
+      <li *ngFor="let task of tasks$ | async">
+        <a [routerLink]="['/tasks', task.id]">{{ task.title }}</a>
+        <span>{{ task.completed ? '(Completed)' : '(In Progress)' }}</span>
+        <button (click)="deleteTask(task.id)">Delete</button>
+      </li>
+    </ul>
+    <p *ngIf="(tasks$ | async)?.length === 0">No tasks yet</p>

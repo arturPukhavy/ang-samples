@@ -1,0 +1,21 @@
+<h2>{{ isNew ? 'Create Task' : 'Edit Task' }}</h2>
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+      <div>
+        <label for="title">Title:</label>
+        <input id="title" formControlName="title" placeholder="Enter task title">
+        <div *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched" class="error">
+          Title is required and must be at least 3 characters long
+        </div>
+      </div>
+      <div>
+        <label for="description">Description:</label>
+        <textarea id="description" formControlName="description" placeholder="Enter task description"></textarea>
+      </div>
+      <div>
+        <label>
+          <input type="checkbox" formControlName="completed"> Completed
+        </label>
+      </div>
+      <button type="submit" [disabled]="taskForm.invalid">Save</button>
+      <button type="button" (click)="goBack()">Cancel</button>
+    </form>
