@@ -9,7 +9,7 @@ import { Task } from '../../models/task';
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.css'
 })
