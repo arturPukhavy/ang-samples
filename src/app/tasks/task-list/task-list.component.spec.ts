@@ -85,4 +85,74 @@ describe('TaskListComponent', () => {
   
     expect(mockTaskService.deleteTask).toHaveBeenCalledWith(1); // Проверяем, что вызван с ID 1
   });
+
+  it('should have task links with correct routerLink', () => {
+    const mockTasks: Task[] = [{ id: 1, title: 'Task 1', description: 'D1', completed: false }];
+    component.tasks$ = of(mockTasks);
+    fixture.detectChanges();
+  
+    const taskLink = fixture.nativeElement.querySelector('li a');
+    expect(taskLink).toBeTruthy();
+    expect(taskLink.textContent).toContain('Task 1');
+    expect(taskLink.getAttribute('ng-reflect-router-link')).toBe('/tasks/1');
+  });
+
+  it('should show task status in span', () => {
+    const mockTasks: Task[] = [{ id: 1, title: 'Task 1', description: 'D1', completed: false }];
+    component.tasks$ = of(mockTasks);
+    fixture.detectChanges();
+  
+    const statusSpan = fixture.nativeElement.querySelector('li span');
+    expect(statusSpan).toBeTruthy();
+    expect(statusSpan.textContent).toContain('(In Progress)');
+  });
+
+  it('should show completed status in span', () => {
+    const mockTasks: Task[] = [{ id: 1, title: 'Task 1', description: 'D1', completed: true }];
+    component.tasks$ = of(mockTasks);
+    fixture.detectChanges();
+  
+    const statusSpan = fixture.nativeElement.querySelector('li span');
+    expect(statusSpan).toBeTruthy();
+    expect(statusSpan.textContent).toContain('(Completed)');
+  });
+
+  it('should show correct links for multiple tasks', () => {
+    const mockTasks: Task[] = [
+      { id: 1, title: 'Task 1', description: 'D1', completed: false },
+      { id: 2, title: 'Task 2', description: 'D2', completed: true }
+    ];
+    component.tasks$ = of(mockTasks);
+    fixture.detectChanges();
+  
+    const taskElements = fixture.nativeElement.querySelectorAll('li a');
+    expect(taskElements.length).toBe(2);
+    expect(taskElements[0].textContent).toContain('Task 1');
+    expect(taskElements[1].textContent).toContain('Task 2');
+    expect(taskElements[0].getAttribute('ng-reflect-router-link')).toBe('/tasks/1');
+    expect(taskElements[1].getAttribute('ng-reflect-router-link')).toBe('/tasks/2');
+  });
+
+  it('should not show delete button when no tasks', () => {
+    component.tasks$ = of([]);
+    fixture.detectChanges();
+  
+    const deleteButton = fixture.nativeElement.querySelector('li button');
+    expect(deleteButton).toBeNull();
+  });
+
+  it('should remove task after delete button click', () => {
+    const mockTasks: Task[] = [{ id: 1, title: 'Task 1', description: 'D1', completed: false }];
+    component.tasks$ = of(mockTasks);
+    mockTaskService.deleteTask.and.returnValue(of(undefined));
+    mockTaskService.getTasks.and.returnValue(of([]));
+    fixture.detectChanges();
+  
+    const deleteButton = fixture.nativeElement.querySelector('li button');
+    deleteButton.click();
+    fixture.detectChanges();
+    
+    const taskElements = fixture.nativeElement.querySelectorAll('li');
+    expect(taskElements.length).toBe(0);
+  });
 });
