@@ -24,7 +24,7 @@ export class TaskListComponent implements OnInit {
 
   deleteTask(id: number): void {
     this.taskService.deleteTask(id).subscribe(() => {
-      this.tasks$ = this.taskService.getTasks(); // Обновляем список после удаления
+      this.tasks$ = this.taskService.getTasks(); 
     });
   }
 }
